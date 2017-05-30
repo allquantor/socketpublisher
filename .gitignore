@@ -16,4 +16,5 @@ src_managed/
 project/boot/
 project/plugins/project/
 .idea
+.DS_Store
 

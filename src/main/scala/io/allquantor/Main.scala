@@ -27,14 +27,14 @@ object Main extends App with System.Executor with System.ErrorHandling
     // Coordinates Data from File
 
     val cSource = FileIO.fromPath(filePath).via(Framing.delimiter(ByteString(CR, LF), Int.MaxValue))
-      .delay(100.millis, DelayOverflowStrategy.backpressure)
+      .delay(100.millis, DelayOverflowStrategy.backpressure).async
     // Noise
     val gSource = Source.tick(Duration.Zero, Duration.Zero, Greets(s"Privet: ")).map { elem =>
       elem.copy(greet = elem.greet ++ s"{${Random.nextInt()}}")
     }
     // Conversions.
-    val serializer = Flow[ByteString].mapAsync(10)(s => Future(parseCoordinates(s.decodeString("UTF-8"))))
-    val deserializer = Flow[PublisherMessage].map(_.toString).map(ByteString.apply(_) concat ByteString(CR, LF))
+    val serializer = Flow[ByteString].map(s => parseCoordinates(s.decodeString("UTF-8")))
+    val deserializer = Flow[PublisherMessage].mapAsync(4)(m => Future(m.toString)).map(ByteString.apply(_) concat ByteString(CR, LF))
 
     val sink = Sink.ignore
 
@@ -45,6 +45,7 @@ object Main extends App with System.Executor with System.ErrorHandling
 
     ClosedShape
   }).withAttributes(errorHandling)
+
 
   socketPublisher.run()
 
