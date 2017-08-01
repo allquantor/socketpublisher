@@ -2,9 +2,9 @@ name := """socketpublisher"""
 
 version := "0.1"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.3"
 
-crossScalaVersions := Seq("2.11.8", "2.12.2")
+crossScalaVersions := Seq("2.11.8", "2.12.3")
 
 scalacOptions := Seq("-unchecked",
   "-feature",
@@ -38,7 +38,7 @@ libraryDependencies ++= {
 lazy val commonSettings = Seq(
   version := "0.1-SNAPSHOT",
   organization := "io.allquantor",
-  scalaVersion := "2.12.2",
+  scalaVersion := "2.12.3",
   test in assembly := {}
 )
 
